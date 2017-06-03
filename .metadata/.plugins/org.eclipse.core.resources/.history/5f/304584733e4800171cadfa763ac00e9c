@@ -35,6 +35,7 @@ public class DiskOptimization{
     }
    
     private void generateLOOK() {
+		// TODO Auto-generated method stub
 		int location[] = arrangeByLOOK(dp.getCurrent(), dp.getSequence());
 		printSequence("LOOK", location);
 	}
@@ -46,23 +47,18 @@ public class DiskOptimization{
 		ArrayList<Integer>sortedList = new ArrayList<Integer>();
 		ArrayList<Integer> finalList = new ArrayList<Integer>();
 		boolean stop = false;
-		
-		//Make a duplicate of the initial list
 		for(int i = 0; i < sequence.length; i++)
 		{
 			sortedList.add(sequence[i]);
 		}
 		
-		//Add the current pin location to the list, then sort it
 		sortedList.add(current);
 		Collections.sort(sortedList);
 	
-		//Get the smallest and biggest number in the sorted list
+		
 		int smallestNumber = sortedList.get(0);
 		int largestNumber = sortedList.get(sortedList.size()-1);
 	
-		
-		//Pin moves downwards and "grabs" all the locations it has to be in
 		if(current > 0)
 		{
 			for(int i = current; i > 0; i--)
@@ -88,7 +84,6 @@ public class DiskOptimization{
 			}
 		}
 		
-		//Once it has completed moving downwards, the pin will make its way up to the biggest number
 		if(stop = true)
 		{
 			for(int i = startNumber+1; i < dp.getCylinders(); i++ )
@@ -104,7 +99,6 @@ public class DiskOptimization{
 			}
 		}
 		
-		//The following lines adds all the location numbers, that the pin stopped at, from an ArrayList to an Array
 		int [] finalArray = new int[finalList.size()];
 		for(int i = 0; i < finalList.size(); i++)
 		{
@@ -261,9 +255,8 @@ public class DiskOptimization{
 	}
 
 	public void generateFCFS(){
-		//For First Come First Serve, no need to re-order the numbers for order of access.
-		//Just calculate the distance moved by pin between each number and find the sum.
         int location[] = dp.getSequence();
+       
         printSequence("FCFS",location);
     }
    
@@ -293,7 +286,8 @@ public class DiskOptimization{
         System.out.println("               = " + total + '\n');
        
     }
- 
+   
+   
     public void generateSSTF(){
         int location[] = arrangeBySSTF(dp.getCurrent(),dp.getSequence());
         printSequence("SSTF", location);
