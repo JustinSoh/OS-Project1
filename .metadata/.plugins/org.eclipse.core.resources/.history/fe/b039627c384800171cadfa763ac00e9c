@@ -41,6 +41,7 @@ public class DiskOptimization{
 	}
 
 	private int[] arrangeByLOOK(int current, int[] sequence) {
+		// TODO Auto-generated method stub
 		int total = sequence.length; 
 		int cutOffNumber = 0;
 		int startNumber = current;
@@ -107,12 +108,16 @@ public class DiskOptimization{
 		return finalArray; 
 	}
 
+
+
 	private void generateCSCAN() {
+		// TODO Auto-generated method stub
 		int location[] = arrangeByCSCAN(dp.getCurrent(), dp.getSequence());
 		printSequence("CSCAN", location);
 	}
 
 	private int[] arrangeByCSCAN(int current, int[] sequence) {
+		// TODO Auto-generated method stub
 		ArrayList<Integer> finalList = new ArrayList<Integer>(); 
 		int total = sequence.length; 
 		int temp = 0; 
@@ -174,6 +179,7 @@ public class DiskOptimization{
 	}
 
 	private void generateSCAN() {
+		// TODO Auto-generated method stub
 		int location[] = arrangeBySCAN(dp.getCurrent(),dp.getSequence());
 		printSequence("SCAN",location);
 	}

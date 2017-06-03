@@ -57,7 +57,7 @@ public class DiskOptimization{
 	
 		
 		int smallestNumber = sortedList.get(0);
-		int largestNumber = sortedList.get(sortedList.size()-1);
+		//int largestNumber = sortedList.get(sortedList.size()-1);
 	
 		if(current > 0)
 		{
