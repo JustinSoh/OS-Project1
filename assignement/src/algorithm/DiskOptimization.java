@@ -12,6 +12,8 @@ public class DiskOptimization{
    
     public static void main(String args[]){
         new DiskOptimization("diskq1.properties");
+        
+        //I very handsome
     }
    
     public DiskOptimization (String filename){
@@ -32,6 +34,7 @@ public class DiskOptimization{
         generateSCAN();
         generateCSCAN();
         generateLOOK();
+
     }
    
     private void generateLOOK() {
