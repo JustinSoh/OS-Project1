@@ -38,14 +38,16 @@ public class DiskOptimization{
     }
    
     private void generateLOOK() {
-		int location[] = arrangeByLOOK(dp.getCurrent(), dp.getSequence());
+		int location[] = arrangeByLOOK(dp.getCurrent(), dp.getPrevious(), dp.getCylinders(), dp.getSequence());
 		printSequence("LOOK", location);
 	}
 
-	private int[] arrangeByLOOK(int current, int[] sequence) {
+	private int[] arrangeByLOOK(int current, int previous, int cylinders, int[] sequence) {
 		int total = sequence.length; 
 		int cutOffNumber = 0;
 		int startNumber = current;
+		int direction = previous - current;
+		int toreturn[] = null;
 		ArrayList<Integer>sortedList = new ArrayList<Integer>();
 		ArrayList<Integer> finalList = new ArrayList<Integer>();
 		boolean stop = false;
@@ -65,202 +67,386 @@ public class DiskOptimization{
 		int largestNumber = sortedList.get(sortedList.size()-1);
 	
 		
-		//Pin moves downwards and "grabs" all the locations it has to be in
-		if(current > 0)
-		{
-			for(int i = current; i > 0; i--)
+		if (direction > 0) {
+			if(current > 0)
 			{
-			
-				for(int j = 0; j < sequence.length; j++)
+				for(int i = current; i > 0; i--)
 				{
-					if(sequence[j] == i)
-					{
-						finalList.add(sequence[j]);
-						current = sequence[j];
-					}
-					
-					
-				}
 				
-				if(i == smallestNumber)
-				{
-					stop = true;
-					
-					break;
-				}
-			}
-		}
-		
-		//Once it has completed moving downwards, the pin will make its way up to the biggest number
-		if(stop = true)
-		{
-			for(int i = startNumber+1; i < dp.getCylinders(); i++ )
-			{	
-				for(int j = 0; j < sequence.length; j++)
-				{
-					if(sequence[j] == i)
+					for(int j = 0; j < sequence.length; j++)
 					{
-						finalList.add(sequence[j]);
-						current = sequence[j];
-					}
-				}
-			}
-		}
-		
-		//The following lines adds all the location numbers, that the pin stopped at, from an ArrayList to an Array
-		int [] finalArray = new int[finalList.size()];
-		for(int i = 0; i < finalList.size(); i++)
-		{
-			finalArray[i] = finalList.get(i); 
-		}
-		return finalArray; 
-	}
-
-	private void generateCSCAN() {
-		int location[] = arrangeByCSCAN(dp.getCurrent(), dp.getSequence());
-		printSequence("CSCAN", location);
-	}
-
-	private int[] arrangeByCSCAN(int current, int[] sequence) {
-		ArrayList<Integer> finalList = new ArrayList<Integer>(); 
-		int total = sequence.length; 
-		int temp = 0; 
-		int secondTemp = dp.current; 
-		
-		//Checks to make sure that the current is not at 0 and then check all the way back down to 0
-		if(current > 0)
-		{
-				for(int i = current; i >0; i--)
-				{
-					for(int j = 0; j < total; j++)
-					{
-						if(i == sequence[j])
+						if(sequence[j] == i)
 						{
 							finalList.add(sequence[j]);
 							current = sequence[j];
 						}
-			
-				}
+						
+						
+					}
 					
-				current = 0; 
-				temp = current;
-			}
-			
-			
-		}
-		//When the head reaches 0, make it start again from 5000 and go back all the way until the initial value
-		if(temp == 0)
-		{
-			current = 5000; 
-			for(int i =  current; i > secondTemp; i--)
-			{
-				
-				for(int j = 0; j < total; j++)
-				{
-					if(sequence[j] == i)
+					if(i == smallestNumber)
 					{
-					finalList.add(sequence[j]);
-					current = sequence[j];
+						stop = true;
+						
+						break;
 					}
 				}
 			}
+			
+			//Once it has completed moving downwards, the pin will make its way up to the biggest number
+			if(stop = true)
+			{
+				for(int i = startNumber+1; i < dp.getCylinders(); i++ )
+				{	
+					for(int j = 0; j < sequence.length; j++)
+					{
+						if(sequence[j] == i)
+						{
+							finalList.add(sequence[j]);
+							current = sequence[j];
+						}
+					}
+				}
+			}
+			
+			//The following lines adds all the location numbers, that the pin stopped at, from an ArrayList to an Array
+			int [] finalArray = new int[finalList.size()];
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				finalArray[i] = finalList.get(i); 
+			}
+			toreturn = finalArray; 
 		}
-		for(int i = 0; i < finalList.size(); i++)
-		{
-			System.out.println(finalList.get(i));
+		
+		else if (direction < 0) {
+			if(current > 0)
+			{
+				for(int i = current; i < cylinders; i++)
+				{
+				
+					for(int j = 0; j < sequence.length; j++)
+					{
+						if(sequence[j] == i)
+						{
+							finalList.add(sequence[j]);
+							current = sequence[j];
+						}
+						
+						
+					}
+					
+					if(i == largestNumber)
+					{
+						stop = true;
+						
+						break;
+					}
+				}
+			}
+			
+			//Once it has completed moving downwards, the pin will make its way up to the biggest number
+			if(stop = true)
+			{
+				for(int i = startNumber+1; i > 0; i-- )
+				{	
+					for(int j = 0; j < sequence.length; j++)
+					{
+						if(sequence[j] == i)
+						{
+							finalList.add(sequence[j]);
+							current = sequence[j];
+						}
+					}
+				}
+			}
+			
+			//The following lines adds all the location numbers, that the pin stopped at, from an ArrayList to an Array
+			int [] finalArray = new int[finalList.size()];
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				finalArray[i] = finalList.get(i); 
+			}
+			toreturn = finalArray; 
 		}
-	
 		
+		return toreturn;
+	}
+
+	private void generateCSCAN() {
+		int location[] = arrangeByCSCAN(dp.getCurrent(), dp.getPrevious(), dp.getCylinders(), dp.getSequence());
+		printSequence("CSCAN", location);
+	}
+
+	private int[] arrangeByCSCAN(int current, int previous, int cylinders, int[] sequence) {
+		ArrayList<Integer> finalList = new ArrayList<Integer>(); 
+		int total = sequence.length; 
+		int temp = 0; 
+		int secondTemp = dp.current; 
+		int direction = previous - current;
+		int toreturn[] = null;
 		
+		if (direction > 0) {
+			
+			if(current > 0)
+			{
+					for(int i = current; i >0; i--)
+					{
+						for(int j = 0; j < total; j++)
+						{
+							if(i == sequence[j])
+							{
+								finalList.add(sequence[j]);
+								current = sequence[j];
+							}
+				
+					}
+						
+					current = 0; 
+					temp = current;
+				}
+				
+				
+			}
+			//When the head reaches 0, make it start again from 5000 and go back all the way until the initial value
+			if(temp == 0)
+			{
+				current = 5000; 
+				for(int i =  current; i > secondTemp; i--)
+				{
+					
+					for(int j = 0; j < total; j++)
+					{
+						if(sequence[j] == i)
+						{
+						finalList.add(sequence[j]);
+						current = sequence[j];
+						}
+					}
+				}
+			}
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				System.out.println(finalList.get(i));
+			}
 		
-		int [] finalArray = new int[finalList.size()];
-		for(int i = 0; i < finalList.size(); i++)
-		{
-			finalArray[i] = finalList.get(i); 
+			
+			
+			
+			int [] finalArray = new int[finalList.size()];
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				finalArray[i] = finalList.get(i); 
+			}
+			toreturn = finalArray;
 		}
-		return finalArray; 
 		
+		else if (direction < 0) {
+			
+			if(current > 0)
+			{
+					for(int i = current; i < cylinders; i++)
+					{
+						for(int j = 0; j < total; j++)
+						{
+							if(i == sequence[j])
+							{
+								finalList.add(sequence[j]);
+								current = sequence[j];
+							}
+				
+					}
+						
+					current = cylinders-1; 
+					temp = current;
+				}
+				
+				
+			}
+			
+			if(temp == cylinders-1)
+			{
+				current = 0; 
+				for(int i = current; i < secondTemp; i++)
+				{
+					
+					for(int j = 0; j < total; j++)
+					{
+						if(sequence[j] == i)
+						{
+						finalList.add(sequence[j]);
+						current = sequence[j];
+						}
+					}
+				}
+			}
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				System.out.println(finalList.get(i));
+			}
+		
+			
+			
+			
+			int [] finalArray = new int[finalList.size()];
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				finalArray[i] = finalList.get(i); 
+			}
+			toreturn = finalArray;
+		}
+		
+		return toreturn;
 	}
 
 	private void generateSCAN() {
-		int location[] = arrangeBySCAN(dp.getCurrent(),dp.getSequence());
+		int location[] = arrangeBySCAN(dp.getCurrent(), dp.getPrevious(), dp.getCylinders(), dp.getSequence());
 		printSequence("SCAN",location);
 	}
 
-	private int[] arrangeBySCAN(int current, int[] sequence) {
+	private int[] arrangeBySCAN(int current, int previous, int cylinders, int[] sequence) {
+		
 		System.out.println("Current is " + current);
 		int total = sequence.length;
 		ArrayList<Integer> finalList = new ArrayList<Integer>(); //Create a Empty list 
 		ArrayList<Integer> duplicateList = new ArrayList<Integer>();  //Create another empty list
 		int count = 0; //initialize the counter
 		int temp = 0; // a variable to store the temporary value 
+		int startNumber = dp.getCurrent();
 		int secondTemp = 0;
+		int direction = previous - current; //check the direction of the disk
 		boolean stop = false; 
-		// used to indicate whether the scan will go downwards towards 0 or upwards towards 5000. 
-		//if its false, it is going downwards, if its true, its going upwards
+		int toreturn[] = null;
 		
-		if(current > 0 && stop == false) 
-		// a if condition to check if the current head is above 0. 
-		{
+		if (direction > 0) {
 			
-			for(int i = current; i > 0; i--) //minus from current all the way down to 0 
+			if(current > 0 && stop == false) 
 			{
 				
-				for(int j = 0; j < total; j++)
-				{	
-					if(sequence[j] == i )
-					{
-						current = sequence[j];
-						finalList.add(current); 
-						//then check if any of the number in the sequence do match, if match add them to a list 
-						
-				
-						
-					}
-				}
-			}
-			temp = current; //temporary store the current value into the temp variable
-			current = 0; // Current = zero 
-			finalList.add(current); //add the current to the finalList for it means that the head has scan all the way to cylinder 0 
-			secondTemp = count; //tells how many current slots have been used
-		
-		}
-		
-		
-		//When the header reaches 0, then stop will equals true and it will then scan back up all the way up to 5000 the maximum cylinder size
-		//If there is any number in the sequence that matches any of the number, add it into the list. 
-		if(current == 0) // happens once the head reaches 0 
-		{
-			stop = true; 
-			duplicateList = finalList; //create another list 
-		
-			if(stop == true)
-			{
-				for(int i = temp+1; i < dp.getCylinders(); i++) 
+				for(int i = current; i > 0; i--) //minus from current all the way down to 0 
 				{
+					
 					for(int j = 0; j < total; j++)
-					{
-							if(sequence[j] == i)
-							{
-								System.out.println(sequence[j]);
-								current = sequence[j];
-								finalList.add(current);
-							}
+					{	
+						if(sequence[j] == i )
+						{
+							current = sequence[j];
+							finalList.add(current); 
+							//then check if any of the number in the sequence do match, if match add them to a list 
+							
+					
+							
 						}
 					}
-				stop = false; 
-				current = 5000; 
 				}
+				temp = current; //temporary store the current value into the temp variable
+				current = 0; // Current = zero 
+				finalList.add(current); //add the current to the finalList for it means that the head has scan all the way to cylinder 0 
+				secondTemp = count; //tells how many current slots have been used
+			
 			}
-		//Converts the arraylist into an array
-		
-		int [] finalArray = new int[finalList.size()];
-		for(int i = 0; i < finalList.size(); i++)
-		{
-			finalArray[i] = finalList.get(i); 
+			
+			
+			//When the header reaches 0, then stop will equals true and it will then scan back up all the way up to 5000 the maximum cylinder size
+			//If there is any number in the sequence that matches any of the number, add it into the list. 
+			if(current == 0) // happens once the head reaches 0 
+			{
+				stop = true; 
+				duplicateList = finalList; //create another list 
+			
+				if(stop == true)
+				{
+					for(int i = startNumber + 1; i < dp.getCylinders(); i++) 
+					{
+						for(int j = 0; j < total; j++)
+						{
+								if(sequence[j] == i)
+								{
+									System.out.println(sequence[j]);
+									current = sequence[j];
+									finalList.add(current);
+								}
+							}
+						}
+					stop = false; 
+					current = 5000; 
+					}
+				}
+			//Converts the arraylist into an array
+			
+			int [] finalArray = new int[finalList.size()];
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				finalArray[i] = finalList.get(i); 
+			}
+			
+			toreturn = finalArray;
 		}
-		return finalArray; 
 		
+		else if (direction < 0) {
+			
+			if(current > 0 && stop == false) 
+			{
+				
+				for(int i = current; i < cylinders; i++) //minus from current all the way down to 0 
+				{
+					
+					for(int j = 0; j < total; j++)
+					{	
+						if(sequence[j] == i )
+						{
+							current = sequence[j];
+							finalList.add(current); 
+							//then check if any of the number in the sequence do match, if match add them to a list 
+							
+					
+							
+						}
+					}
+				}
+				temp = current; //temporary store the current value into the temp variable
+				current = cylinders-1;
+				finalList.add(current); //add the current to the finalList for it means that the head has scan all the way to cylinder 0 
+				secondTemp = count; //tells how many current slots have been used
+			
+			}
+			
+			
+			
+			if(current == cylinders-1) 
+			{
+				stop = true; 
+				duplicateList = finalList; //create another list 
+			
+				if(stop == true)
+				{
+					for(int i = startNumber+1 ; i > 0; i--) 
+					{
+						for(int j = 0; j < total; j++)
+						{
+								if(sequence[j] == i)
+								{
+									System.out.println(sequence[j]);
+									current = sequence[j];
+									finalList.add(current);
+								}
+							}
+						}
+					stop = false; 
+					current = 5000; 
+					}
+				}
+			//Converts the arraylist into an array
+			
+			int [] finalArray = new int[finalList.size()];
+			for(int i = 0; i < finalList.size(); i++)
+			{
+				finalArray[i] = finalList.get(i); 
+			}
+			
+			toreturn = finalArray;
+		}
+		
+		return toreturn;
 	}
 
 	public void generateFCFS(){
