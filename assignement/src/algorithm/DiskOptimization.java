@@ -32,7 +32,7 @@ public class DiskOptimization{
         generateFCFS();
         generateSSTF();
         generateSCAN();
-        generateCSCAN();
+        generateCLOOK();
         generateLOOK();
 
     }
@@ -172,12 +172,12 @@ public class DiskOptimization{
 		return toreturn;
 	}
 
-	private void generateCSCAN() {
-		int location[] = arrangeByCSCAN(dp.getCurrent(), dp.getPrevious(), dp.getCylinders(), dp.getSequence());
-		printSequence("CSCAN", location);
+	private void generateCLOOK() {
+		int location[] = arrangeByCLOOK(dp.getCurrent(), dp.getPrevious(), dp.getCylinders(), dp.getSequence());
+		printSequence("CLOOK", location);
 	}
 
-	private int[] arrangeByCSCAN(int current, int previous, int cylinders, int[] sequence) {
+	private int[] arrangeByCLOOK(int current, int previous, int cylinders, int[] sequence) {
 		ArrayList<Integer> finalList = new ArrayList<Integer>(); 
 		int total = sequence.length; 
 		int temp = 0; 
@@ -185,6 +185,8 @@ public class DiskOptimization{
 		int direction = previous - current;
 		int toreturn[] = null;
 		
+		//Check which direction the pin shall move
+		//If positive, pin moves downwards first
 		if (direction > 0) {
 			
 			if(current > 0)
@@ -218,6 +220,7 @@ public class DiskOptimization{
 					{
 						if(sequence[j] == i)
 						{
+						//Add numbers into the ArrayList
 						finalList.add(sequence[j]);
 						current = sequence[j];
 						}
@@ -231,7 +234,7 @@ public class DiskOptimization{
 		
 			
 			
-			
+			//Returns the final array
 			int [] finalArray = new int[finalList.size()];
 			for(int i = 0; i < finalList.size(); i++)
 			{
@@ -240,6 +243,7 @@ public class DiskOptimization{
 			toreturn = finalArray;
 		}
 		
+		//If direction < 0, pin moves upwards first
 		else if (direction < 0) {
 			
 			if(current > 0)
@@ -263,6 +267,7 @@ public class DiskOptimization{
 				
 			}
 			
+			//When temp hits the maximum cylinders, make it move down 
 			if(temp == cylinders-1)
 			{
 				current = 0; 
@@ -286,7 +291,7 @@ public class DiskOptimization{
 		
 			
 			
-			
+			//Returns the full array
 			int [] finalArray = new int[finalList.size()];
 			for(int i = 0; i < finalList.size(); i++)
 			{
